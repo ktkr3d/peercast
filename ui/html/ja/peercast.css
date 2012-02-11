@@ -1,0 +1,132 @@
+/* Check browsers: InternetExplorer6.0, Netscape7.1, Opera7.23 */
+
+* {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size:100%;
+	
+}
+body{
+	font-size:75%;
+	width:98%;
+	height:100%;
+	margin:1%;
+}
+.body{
+	margin:0px;
+	padding:1em;
+	height:100%;
+	border-width:2px;
+	border-style:solid;
+	border-color:#999;
+	background-color:#fff;
+}
+a {
+	color: blue;
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: underline;
+}
+.titlelinks {
+	font-size: 100%;
+	font-weight: bold;
+}
+.small {
+	font-size: 75%;
+	font-weight:normal;
+}
+.big {
+	font-size: 200%;
+	font-weight: bold;
+}
+td { text-align:left;}
+th { text-align:center;}
+.r { text-align:right;}
+td,th { padding:0.2em;empty-cells:show; }
+input { border-color:transparent; }
+
+/* List Colors */
+#c { background-color:#ccc; }
+#d { background-color:#ddd; }
+#e { background-color:#eee; }
+#co,
+#do,
+#eo { background-color:#B2DDE1; }
+.relays #c { background-color:#A5CCFF; }
+.relays #d { background-color:#D1E4FF; }
+.relays #e { background-color:#E3EFFF; }
+
+.disp { display:block; }
+.hide { display:none; }
+
+/* BOLD,NORMAL */
+#B { font-weight:bold; }
+#N { font-weight:normal; }
+
+/* .menu : TopCategories */
+.menu a,
+.menu a:link,
+.menu a:visited {
+	font-size:125%;
+	border:2px #eee outset;
+	padding:0.1em 0.25em;
+	background-color:#eee;
+	text-decoration:none;
+	color:blue;
+	line-height:1.8em;
+}
+.menu a:active,
+.menu a:hover {
+	border-style:inset;
+	background-color:#f2f2f2;
+	text-decoration:none;
+	color:blue;
+}
+/* .relays : RelayChannels */
+.relays tr th{
+	font-size:100%;
+	text-decoration:underline;
+}
+.relays tr td{
+	font-size:80%;
+	text-align:center;
+}
+/* Amazon : relay:relayinfo*/
+.amazon form{
+	margin:0em;padding:0em;
+	display:inline;
+}
+.amazon form input{
+	margin:0em;padding:0.1em;
+	font-size:75%;
+}
+h3{
+	/* Channel Name */
+	margin:0em;
+	font-size:120%;
+}
+h4{
+	/* Channel Genre */
+	margin:0em;
+	font-size:100%;
+	font-weight:normal;
+}
+h5{
+	/* Track Info */
+	margin:0em;
+	font-size:100%;
+	font-weight:normal;
+}
+h5 span{
+	/* Playing: */
+	font-style:italic;
+}
+address {
+	/* copyrights */
+	padding-top:1em;
+	margin-top:1em;
+	font-size:80%;
+	font-style:normal;
+	border-width:1px 0px 0px 0px;
+	border-style:solid;
+}

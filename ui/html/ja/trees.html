@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+<title>PeerCast on {$servMgr.serverIP}:{$servMgr.serverPort}</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style><!--
+.normal {{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size:80%;
+}
+a, a:link, a:visited {{
+	text-decoration:none;
+	color:blue;
+}
+--></style>
+</head>
+
+<body bgcolor="#dddddd">
+<div align="center">
+  <table width="100%" height="100%" border="1" align="center" cellpadding="5" cellspacing="0" bordercolor="#999999" bgcolor="#ffffff">
+    <tr> 
+      <td valign="top">
+          <div align="center">
+            <table width="100%" border="0">
+              <tr> 
+                <td nowrap>
+                  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr> 
+                      <td valign="middle" nowrap> <table border="0" align="center" cellpadding="1" cellspacing="0">
+                          <tr> 
+                            <td rowspan="2" valign="middle"><a href="http://www.peercast.org"><img src="images/small-logo.png" alt="www.peercast.org" border="0"></a></td>
+                            <td valign="bottom"><div align="left" class="normal"><span class="titlelinksBig">peercast</span></div></td>
+                          </tr>
+                          <tr> 
+                            <td valign="top"><div align="center"><span class="normal">{$servMgr.version}</span> 
+                              </div></td>
+                          </tr>
+                        </table>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <table width="100%" border="1" cellpadding="1" cellspacing="0">
+            <tr class="normal">
+              <td><div align="center"><a href="index.html">情報</a></div></td>
+              <td><div align="center"><a href="http://yp.peercast.org/?host={$servMgr.serverLocalIP}:{$servMgr.serverPort1}" target="_blank">Yellow Pages</a></div></td>
+              <td><div align="center"><a href="relays.html">リレー</a></div></td>
+              <td><div align="center"><a href="broadcast.html">配信</a></div></td>
+              <td><div align="center"><a href="connections.html">コネクション</a></div></td>
+              <td><div align="center"><a href="settings.html">設定</a></div></td>
+              <td><div align="center"><a href="viewlog.html">ログ表示</a></div></td>
+              <td><div align="center"><a href="logout.html">ログアウト</a></div></td>
+            </tr>
+          </table>
+
+
+<ul>
+<li><a href="JavaScript:deproy('about')">Notes</a></li>
+<div id="about" style="display:none;">
+<p>
+<ul>
+<li>IPアドレスの文字色は下流の総リレー数を表しています (少 青←→赤 多)</li>
+<ul><li><font color="#2500e0">■</font><font color="#3400e0">■</font><font color="#4300e0">■</font><font color="#5200e0">■</font><font color="#6100e0">■</font><font color="#7000e0">■</font><font color="#7e00e0">■</font><font color="#8d00e0">■</font><font color="#9c00e0">■</font><font color="#ab00e0">■</font><font color="#ba00e0">■</font><font color="#c900e0">■</font><font color="#d800e0">■</font><font color="#e000d8">■</font><font color="#e000c9">■</font><font color="#e000ba">■</font><font color="#e000ab">■</font><font color="#e0009c">■</font><font color="#e0008d">■</font><font color="#e0007e">■</font><font color="#e00070">■</font><font color="#e00061">■</font><font color="#e00052">■</font><font color="#e00043">■</font><font color="#e00034">■</font><font color="#e00025">■</font></li></ul>
+<li>線が赤くなっているのは、実際の位置と異なる所に表示されているものです (再接続直後など)</li>
+<li>■をクリックすると下流を全て展開・折畳します</li>
+<li>IPアドレスをクリックすると直下を展開・折畳します</li>
+<li>◇をクリックするとIP検索ができます</li>
+<li>括弧内の数字は (下流の総リレー数/リレー数) [Hop数] 接続時間 です</li>
+</ul>
+</p>
+<p>
+<ul>
+<li><font color="#00cc00">●</font> リレーできるホスト</li>
+<li><font color="#0000ff">■</font> リレーしているホストだが、これ以上のリレーはできないホスト</li>
+<li><font color="#dd00dd">◆</font> リレーできないホスト</li>
+<li><font color="#ff8800">▼</font> リレーしているホスト (ポート0)</li>
+<li><font color="#ee0000">▲</font> ポート0のホスト </li>
+</ul>
+</p>
+</div>
+</ul>
+
+<ul>
+<li><a href="JavaScript:getTrees(false)">Reload</a></li>
+</ul>
+
+{@loop chanMgr.numChannels} 
+<div id="tree_show_{$loop.channel.id}" style="display:none;">
+<h2><a href="tree.html?id={$loop.channel.id}">{$loop.channel.name}</a></h2>
+<div id="tree_{$loop.channel.id}"></div>
+</div>
+{@end} 
+
+<script type="text/javascript" src="tree.js.html"></script>
+<script language="JavaScript">
+<!--
+
+getTrees(true);
+
+function getTrees(open)
+{{
+	{@loop chanMgr.numChannels}
+	if('{$loop.channel.status}' == 'RECEIVE')
+		getTree('{$loop.channel.id}', open);
+	{@end}
+}
+
+function getTree(id, open)
+{{
+	if(open)
+		deproy('tree_show_'+id);
+	document.getElementById('tree_'+id).innerHTML = '<ul><li><b>Now Loading...</b></li></ul>';
+	requestFile('', 'GET', 'hosts.html?id='+id, true, on_loaded, 'tree_'+id);
+}
+
+function on_loaded(obj, arg)
+{{
+	var elem = document.getElementById(arg);
+	
+	try
+	{{
+		var str = "<pre style=\"font-family:'ＭＳ ゴシック',monospace; font-size:14px; line-height:14px; padding-left:30px;\">";
+		str += showTree(obj.responseText, false);
+		str += '</pre>';
+		elem.innerHTML = str;
+	}
+	catch(e)
+	{{
+		var tmp = '';
+		tmp += '<font color="#ff0000"><b>';
+		tmp += e.name + ': ' + e.message;
+		tmp += '</b></font>';
+		elem.innerHTML = tmp;
+	}
+}
+
+// Author: ◆e5bW6vDOJ.
+// -->
+</script>
+
+<noscript>
+<p>
+<font color="#ff0000">
+<b>JavaScriptが無効になっています
+</b></font>
+</p>
+</noscript>
+
+<form name="check" method="post" action="http://www.iphiroba.jp/ip.php" target="_blank">
+<input type="hidden" name="ip" />
+<input type="hidden" name="submit-ip" value="検索" />
+</form>
+
+          <hr size="1">
+          <div align="center" class="normal"> &copy; 2005 <a href="http://www.peercast.org" target="_blank">peercast.org</a> 
+          </div>
+      </td>
+    </tr>
+  </table>
+</div>
+
+</body>
+</html>
+

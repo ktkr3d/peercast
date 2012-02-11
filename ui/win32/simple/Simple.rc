@@ -1,0 +1,364 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+// Generated Help ID header file
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "resource.hm"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+#include "resource.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// ﾆｭｰﾄﾗﾙ (ｼｽﾃﾑ標準) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEUSD)
+#ifdef _WIN32
+LANGUAGE LANG_NEUTRAL, SUBLANG_SYS_DEFAULT
+#pragma code_page(932)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_TRAYMENU MENU DISCARDABLE 
+BEGIN
+    POPUP "popup"
+    BEGIN
+        MENUITEM "情報",                        ID_POPUP_ABOUT
+        MENUITEM "ヘルプ",                      ID_POPUP_HELP
+        MENUITEM SEPARATOR
+        POPUP "ポップアップメッセージ"
+        BEGIN
+            MENUITEM "PeerCast",                    ID_POPUP_SHOWMESSAGES_PEERCAST
+
+            MENUITEM "配信者",                      ID_POPUP_SHOWMESSAGES_BROADCASTERS
+
+            MENUITEM "トラック情報",                ID_POPUP_SHOWMESSAGES_TRACKINFO
+
+            MENUITEM "アップデート情報",            ID_POPUP_POPUPMESSAGES_UPGRADEALERTS
+            , CHECKED, GRAYED
+        END
+        POPUP "高度"
+        BEGIN
+            MENUITEM "情報",                        ID_POPUP_ADVANCED_INFORMATION
+
+            MENUITEM "リレーチャンネル",            ID_POPUP_ADVANCED_RELAYEDCHANNELS
+
+            MENUITEM "配信",                        ID_POPUP_ADVANCED_BROADCAST
+
+            MENUITEM "コネクション",                ID_POPUP_CONNECTIONS
+            MENUITEM "ログ",                        ID_POPUP_ADVANCED_VIEWLOG
+
+            MENUITEM "設定",                        ID_POPUP_SETTINGS
+            MENUITEM "GUIを開く",                   ID_POPUP_ADVANCED_SHOWGUI
+
+        END
+        POPUP "追加設定"
+        BEGIN
+            MENUITEM "終了時、表示位置を保存",      ID_POPUP_SAVE_GUI_POS
+            , CHECKED
+            MENUITEM "再接続時下流維持",            ID_POPUP_KEEP_DOWNSTREAMS
+            , CHECKED
+        END
+        MENUITEM SEPARATOR
+        POPUP "終了"
+        BEGIN
+            MENUITEM "はい",                        ID_POPUP_EXIT_CONFIRM
+            MENUITEM "いいえ",                      ID_POPUP_EXIT_NO
+        END
+    END
+END
+
+IDR_LTRAYMENU MENU DISCARDABLE 
+BEGIN
+    POPUP "popup"
+    BEGIN
+        MENUITEM SEPARATOR
+        MENUITEM "イエローページ",              ID_POPUP_YELLOWPAGES
+        POPUP "イエローページ"
+        BEGIN
+            MENUITEM "AAA",                         ID_POPUP_YELLOWPAGES1
+            MENUITEM "BBB",                         ID_POPUP_YELLOWPAGES2
+        END
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_MAINWINDOW DIALOGEX 0, 0, 298, 341
+STYLE DS_CENTER | WS_MINIMIZEBOX | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "PeerCast"
+FONT 9, "MS UI Gothic", 0, 0, 0x1
+BEGIN
+    LISTBOX         IDC_LIST1,3,291,291,43,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | 
+                    WS_TABSTOP
+    CONTROL         "有効",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | BS_PUSHLIKE | 
+                    WS_TABSTOP,9,29,60,20,WS_EX_TRANSPARENT
+    EDITTEXT        IDC_EDIT1,127,18,47,12,ES_AUTOHSCROLL
+    RTEXT           "ポート :",IDC_STATIC,107,20,18,8
+    LISTBOX         IDC_LIST2,3,206,291,71,LBS_OWNERDRAWFIXED | 
+                    LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "ログ",IDC_STATIC_LOG,3,282,13,8
+    LTEXT           "コネクション",IDC_STATIC_CONNECTION,3,184,40,8
+    GROUPBOX        "",IDC_STATIC,3,4,291,49
+    PUSHBUTTON      "クリア",IDC_BUTTON1,35,279,25,11
+    LISTBOX         IDC_LIST3,3,81,291,67,LBS_OWNERDRAWFIXED | 
+                    LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "切断",IDC_BUTTON5,67,65,43,13
+    GROUPBOX        "リレー",IDC_GROUPBOX_RELAY,3,54,291,96
+    EDITTEXT        IDC_EDIT3,127,34,47,12,ES_PASSWORD | ES_AUTOHSCROLL
+    RTEXT           "パスワード :",IDC_STATIC,89,36,36,8
+    CONTROL         "デバッグ",IDC_LOGDEBUG,"Button",BS_AUTOCHECKBOX | 
+                    BS_PUSHLIKE | WS_TABSTOP,127,279,32,11
+    CONTROL         "ネットワーク",IDC_LOGNETWORK,"Button",BS_AUTOCHECKBOX | 
+                    BS_PUSHLIKE | WS_TABSTOP,185,279,35,11
+    CONTROL         "エラー",IDC_LOGERRORS,"Button",BS_AUTOCHECKBOX | 
+                    BS_PUSHLIKE | WS_TABSTOP,159,279,25,11
+    CONTROL         "停止",IDC_CHECK9,"Button",BS_AUTOCHECKBOX | BS_PUSHLIKE | 
+                    WS_TABSTOP,60,279,30,11
+    PUSHBUTTON      "再生",IDC_BUTTON8,10,65,22,13
+    CONTROL         "チャンネル",IDC_LOGCHANNELS,"Button",BS_AUTOCHECKBOX | 
+                    BS_PUSHLIKE | WS_TABSTOP,221,279,35,11
+    PUSHBUTTON      "再接続",IDC_BUTTON3,41,65,24,13
+    EDITTEXT        IDC_EDIT9,33,159,261,14,ES_AUTOHSCROLL
+    CONTROL         "DJ",IDC_CHECK11,"Button",BS_AUTOCHECKBOX | BS_PUSHLIKE | 
+                    WS_TABSTOP,5,160,23,12
+    RTEXT           "最大リレー数 :",IDC_STATIC,194,36,40,8
+    EDITTEXT        IDC_MAXRELAYS,241,33,40,14,ES_AUTOHSCROLL | ES_NUMBER
+    PUSHBUTTON      "キープ",IDC_BUTTON9,112,65,24,13
+    PUSHBUTTON      "切断",IDC_BUTTON6,47,179,43,13
+    LTEXT           "Peercast-VP",IDC_STATIC,21,14,39,8
+END
+
+IDD_CHANINFO DIALOGEX 0, 0, 184, 207
+STYLE DS_SETFOREGROUND | WS_POPUP | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_TOOLWINDOW
+CAPTION "Channel Information"
+FONT 9, "MS UI Gothic", 400, 0, 0x80
+BEGIN
+    LTEXT           "名前:",IDC_STATIC,7,8,24,9
+    EDITTEXT        IDC_EDIT_NAME,7,18,170,21,ES_MULTILINE | ES_READONLY | 
+                    NOT WS_BORDER | NOT WS_TABSTOP,WS_EX_STATICEDGE
+    LTEXT           "内容:",IDC_STATIC,7,79,93,9
+    EDITTEXT        IDC_EDIT_PLAYING,8,90,170,21,ES_MULTILINE | ES_READONLY | 
+                    NOT WS_BORDER | NOT WS_TABSTOP,WS_EX_STATICEDGE
+    LTEXT           "DJ メッセージ:",IDC_STATIC,7,117,41,9
+    EDITTEXT        IDC_EDIT_MESSAGE,8,128,170,21,ES_MULTILINE | ES_READONLY | 
+                    NOT WS_BORDER | NOT WS_TABSTOP,WS_EX_STATICEDGE
+    PUSHBUTTON      "URL",IDC_CONTACT,7,185,34,15,0,0,HIDC_CONTACT
+    LTEXT           "詳細:",IDC_STATIC,7,43,67,8
+    EDITTEXT        IDC_EDIT_DESC,8,53,170,21,ES_MULTILINE | ES_READONLY | 
+                    NOT WS_BORDER | NOT WS_TABSTOP,WS_EX_STATICEDGE
+    RTEXT           "形式",IDC_FORMAT,69,80,107,8
+    LTEXT           "ジャンル:",IDC_STATIC,63,5,22,8
+    EDITTEXT        IDC_EDIT_GENRE,87,3,90,12,ES_AUTOHSCROLL | ES_READONLY | 
+                    NOT WS_BORDER | NOT WS_TABSTOP,WS_EX_STATICEDGE
+    CONTROL         "キープ",IDC_KEEP,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
+                    144,188,33,10
+    LTEXT           "ステータス:",IDC_STATIC,7,153,41,9
+    EDITTEXT        IDC_EDIT_STATUS,8,163,82,12,ES_READONLY | NOT WS_BORDER | 
+                    NOT WS_TABSTOP,WS_EX_STATICEDGE
+    PUSHBUTTON      "再生",IDC_PLAY,56,185,34,15
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO MOVEABLE PURE 
+BEGIN
+    IDD_MAINWINDOW, DIALOG
+    BEGIN
+        LEFTMARGIN, 3
+        RIGHTMARGIN, 294
+        TOPMARGIN, 3
+        BOTTOMMARGIN, 336
+    END
+
+    IDD_CHANINFO, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 177
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 200
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // ﾆｭｰﾄﾗﾙ (ｼｽﾃﾑ標準) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// 英語 (ｱﾒﾘｶ) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDC_SIMPLE MENU DISCARDABLE 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "E&xit",                       IDM_EXIT
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About ...",                  IDM_ABOUT
+    END
+    POPUP "Settings"
+    BEGIN
+        MENUITEM "GUI",                         IDM_SETTINGS_GUI
+    END
+END
+
+IDR_VERMENU MENU DISCARDABLE 
+BEGIN
+    POPUP "popup"
+    BEGIN
+        MENUITEM "Please upgrade PeerCast. Click here to download.", 
+                                                ID_POPUP_UPGRADE
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOG DISCARDABLE  22, 17, 163, 59
+STYLE DS_MODALFRAME | DS_SETFOREGROUND | DS_CENTER | WS_CAPTION | WS_SYSMENU
+CAPTION "About"
+FONT 8, "System"
+BEGIN
+    ICON            IDI_SIMPLE,IDC_MYICON,14,9,20,20
+    LTEXT           "PeerCast",IDC_ABOUTVER,43,9,103,8,SS_NOPREFIX
+    LTEXT           "Copyright (C) 2005-2007",IDC_STATIC,43,22,119,8
+    PUSHBUTTON      "OK",IDOK,134,40,24,12,WS_GROUP
+    PUSHBUTTON      "www.peercast.org",IDC_BUTTON1,42,40,66,12
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO MOVEABLE PURE 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        BOTTOMMARGIN, 58
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_SIMPLE              ICON    DISCARDABLE     "Simple.ICO"
+IDI_SMALL2              ICON    DISCARDABLE     "small1.ico"
+IDI_SMALL               ICON    DISCARDABLE     "small3.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDC_SIMPLE ACCELERATORS MOVEABLE PURE 
+BEGIN
+    "?",            IDM_ABOUT,              ASCII,  ALT
+    "/",            IDM_ABOUT,              ASCII,  ALT
+END
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+2 TEXTINCLUDE MOVEABLE PURE 
+BEGIN
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""resource.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE MOVEABLE PURE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+1 TEXTINCLUDE MOVEABLE PURE 
+BEGIN
+    "resource.h\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_APP_TITLE           "PeerCast"
+END
+
+#endif    // 英語 (ｱﾒﾘｶ) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

@@ -1,0 +1,290 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>PeerCast on {$servMgr.serverIP}:{$servMgr.serverPort}</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="refresh" content="{$servMgr.refreshHTML}">
+<link href="peercast.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div align="center">
+<table cellpadding="1" cellspacing="0">
+  <tr> 
+    <td rowspan="2" valign="middle"><a href="/admin?cmd=redirect&amp;url=http://www.peercast.org" target="_blank"><img src="images/small-logo.png" alt="www.peercast.org" border="0"></a></td>
+    <td valign="bottom" class="big">peercast</td>
+  </tr>
+  <tr>
+    <th valign="top" class="small">{$servMgr.version}</th>
+  </tr>
+</table>
+{@if servMgr.upgradeURL}<p><a href="{$servMgr.upgradeURL}" target="_blank" class="big" style="color:red;">新しいバージョンのPeerCastが検出されました。ここをクリックして最新版をインストールしてください。</a></p>{@end}
+{@if servMgr.rootMsg}<p>{$servMgr.rootMsg}</p>{@end}
+<table width="100%" border="1" cellpadding="1" cellspacing="0">
+  <tr class="normal"> 
+              <td><div align="center"><a href="index.html">情報</a></div></td>
+              <td><div align="center"><a href="http://yp.peercast.org/?host={$servMgr.serverLocalIP}:{$servMgr.serverPort1}" target="_blank">Yellow 
+                  Pages</a></div></td>
+              <td><div align="center"><a href="relays.html">リレー</a></div></td>
+              <td><div align="center"><a href="broadcast.html">配信</a></div></td>
+              <td><div align="center"><a href="connections.html">コネクション</a></div></td>
+              <td><div align="center"><a href="settings.html">設定</a></div></td>
+              <td><div align="center"><a href="viewlog.html">ログ表示</a></div></td>
+              <td><div align="center"><a href="logout.html">ログアウト</a></div></td>
+</tr></table>
+          
+          <br>
+          <!-- InstanceBeginEditable name="content" --> 
+          <DIV align=center></DIV>
+          
+<table>
+{@if page.channel.isBroadcast}
+<form action="/admin" method="GET">
+<input type="hidden" name="cmd" value="setmeta" />
+  <tr id="c">
+    <th colspan="2">チャンネル情報</th>
+  </tr>
+  <tr id="e">
+    <td>チャンネル名</td>
+    <td><input type="hidden" name="name" value="{$page.channel.name}" />
+<a href="peercast://pls/{$page.channel.id}">{$page.channel.name}</a></td>
+  </tr>
+  <tr id="d">
+    <td>ジャンル</td>
+    <td><input size="50" type="text" name="genre" value="{$page.channel.genre}" /></td>
+  </tr>
+  <tr id="e">
+    <td>概要</td>
+    <td><input size="50" type="text" name="desc" value="{$page.channel.desc}" /></td>
+  </tr>
+  <tr id="d">
+    <td>URL</td>
+    <td><a href="/admin?cmd=redirect&amp;url={$page.channel.contactURL}" target="_blank">{$page.channel.contactURL}</a><br>
+    <input size="50" type="text" name="url" value="{$page.channel.contactURL}" /></td>
+    
+  </tr>
+  <tr id="e">
+    <td>配信者から…</td>
+    <td><input size="50" type="text" name="comment" value="{$page.channel.comment}" /></td>
+  </tr>
+  <tr id="d">
+    <td>ID</td>
+    <td><a href="http://{$servMgr.serverLocalIP}:{$servMgr.serverPort1}/pls/{$page.channel.id}.pls">{$page.channel.id}</a></td>
+  </tr>
+  <tr id="e">
+    <td>形式</td>
+    <td>{$page.channel.type}</td>
+  </tr>
+  <tr id="d">
+    <td>ビットレート</td>
+    <td>{$page.channel.bitrate} kbps</td>
+  </tr>
+  <tr id="e">
+    <td>取得元</td>
+    <td>{$page.channel.sourceType}- {$page.channel.sourceProtocol}<br>
+      {$page.channel.sourceURL}</td>
+  </tr>
+  <tr id="d">
+    <td>受信時間</td>
+    <td>{$page.channel.uptime}</td>
+  </tr>
+  <tr id="e">
+    <td>状態</td>
+    <td>{$page.channel.status}</td>
+  </tr>
+  <tr id="d">
+    <td>Position</td>
+    <td>{$page.channel.streamPos}</td>
+  </tr>
+  <tr id="e">
+    <td>Head</td>
+    <td>{$page.channel.headPos} ({$page.channel.headLen} bytes)</td>
+  </tr>
+  <tr id="c">
+    <th colspan="2">受信中タイトル情報</th>
+  </tr>
+  <tr id="e">
+    <td>アーティスト</td>
+    <td><input size="50" type="text" name="t_artist" value="{$page.channel.track.artist}" /></td>
+  </tr>
+  <tr id="d">
+    <td>タイトル</td>
+    <td><input size="50" type="text" name="t_title" value="{$page.channel.track.title}" /></td>
+  </tr>
+  <tr id="e">
+    <td>アルバム</td>
+    <td><input size="50" type="text" name="t_album" value="{$page.channel.track.album}" /></td>
+  </tr>
+  <tr id="e">
+    <td>ジャンル</td>
+    <td><input size="50" type="text" name="t_genre" value="{$page.channel.track.genre}" /></td>
+  </tr>
+  <tr id="e">
+    <td>連絡先</td>
+    <td><input size="50" type="text" name="t_contact" value="{$page.channel.track.contactURL}" /></td>
+  </tr>
+<tr id="e">
+ <td colspan=2 align="center"><input type="submit" name="_no_key_meta_" value="更新"/></td>
+</tr>
+</form>
+{@else}
+<table>
+  <tr id="c">
+    <th colspan="2">チャンネル情報</th>
+  </tr>
+  <tr id="e">
+    <td>チャンネル名</td>
+    <td><a href="peercast://pls/{$page.channel.id}">{$page.channel.name}</a></td>
+  </tr>
+  <tr id="d">
+    <td>ジャンル</td>
+    <td>{$page.channel.genre}</td>
+  </tr>
+  <tr id="e">
+    <td>概要</td>
+    <td>{$page.channel.desc}</td>
+  </tr>
+  <tr id="d">
+    <td>URL</td>
+    <td><a href="/admin?cmd=redirect&amp;url={$page.channel.contactURL}" target="_blank">{$page.channel.contactURL}</a></td>
+    
+  </tr>
+  <tr id="e">
+    <td>配信者から…</td>
+    <td>{$page.channel.comment}</td>
+  </tr>
+  <tr id="d">
+    <td>ID</td>
+    <td><a href="http://{$servMgr.serverLocalIP}:{$servMgr.serverPort1}/pls/{$page.channel.id}.pls">{$page.channel.id}</a></td>
+  </tr>
+  <tr id="e">
+    <td>形式</td>
+    <td>{$page.channel.type}</td>
+  </tr>
+  <tr id="d">
+    <td>ビットレート</td>
+    <td>{$page.channel.bitrate} kbps</td>
+  </tr>
+  <tr id="e">
+    <td>取得元</td>
+    <td>{$page.channel.sourceType}- {$page.channel.sourceProtocol}<br>
+      {$page.channel.sourceURL}</td>
+  </tr>
+  <tr id="d">
+    <td>受信時間</td>
+    <td>{$page.channel.uptime}</td>
+  </tr>
+  <tr id="e">
+    <td>状態</td>
+    <td>{$page.channel.status}</td>
+  </tr>
+  <tr id="d">
+    <td>Position</td>
+    <td>{$page.channel.streamPos}</td>
+  </tr>
+  <tr id="e">
+    <td>Head</td>
+    <td>{$page.channel.headPos} ({$page.channel.headLen} bytes)</td>
+  </tr>
+  <tr id="c">
+    <th colspan="2">受信中タイトル情報</th>
+  </tr>
+  <tr id="e">
+    <td>アーティスト</td>
+    <td>{$page.channel.track.artist}</td>
+  </tr>
+  <tr id="d">
+    <td>タイトル</td>
+    <td>{$page.channel.track.title}</td>
+  </tr>
+  <tr id="e">
+    <td>アルバム</td>
+    <td>{$page.channel.track.album}</td>
+  </tr>
+  <tr id="e">
+    <td>ジャンル</td>
+    <td>{$page.channel.track.genre}</td>
+  </tr>
+  <tr id="e">
+    <td>連絡先</td>
+    <td>{$page.channel.track.contactURL}</td>
+  </tr>
+{@end}
+  <tr>
+    <td>検索：</td>
+    <td class="amazon">
+<!--
+      <form method="get" action="http://www.amazon.co.jp/exec/obidos/external-search" target="search" name="amajs">
+        <input type="hidden" name="keyword" value="">
+        <input type="hidden" name="mode" value="music-jp">
+        <input type="hidden" name="encoding-string-jp" value="日本語">
+        <input type="button" value="Amazon(javascript)" onClick="javascript:
+          var ABA='{$page.channel.track.artist}';ABA=ABA.replace(/^\s+|\s+$/g,'');
+          var ABT='{$page.channel.track.title}';ABT=ABT.replace(/^\s+|\s+$/g,'');
+          document.amajs.keyword.value={@if page.channel.track.artist}ABA+' '+{@end}ABT;submit();
+        ">
+      </form>
+-->
+      <form method="get" action="http://www.google.co.jp/search" target="search">
+        <input type="hidden" name="hl" value="ja">
+        <input type="hidden" name="ie" value="utf8">
+        <input type="hidden" name="q" value="{@if page.channel.track.artist}{$page.channel.track.artist} {@end}{$page.channel.track.title}">
+        <input type="hidden" name="sitesearch" value="www.amazon.co.jp">
+        <input type="submit" value="Amazon" name="btnI">
+      </form>
+      <form method="get" action="http://www.google.co.jp/search" target="search">
+        <input type="hidden" name="hl" value="ja">
+        <input type="hidden" name="ie" value="utf8">
+        <input type="hidden" name="q" value="{@if page.channel.track.artist}{$page.channel.track.artist} {@end}{$page.channel.track.title}">
+        <input type="submit" value="Google" name="btnG">
+      </form>
+    </td>
+  </tr>
+</table>
+{@if page.channel.numHits}
+<p>&nbsp;</p>
+<script language="JavaScript">
+function checkip(ip){{
+  document.check.ip.value = ip;
+  document.check.submit();
+}
+</script>
+<form name="check" method="post" action="http://www2.arearesearch.co.jp/ip-kekka.php">
+<input type="hidden" name="ip" size="34">
+<table>
+  <tr id="c" onmouseover="javascript:this.setAttribute('id', 'co');" onmouseout="javascript:this.setAttribute('id', 'c');">
+    <th>&nbsp</th>
+    <th>IP:ポート</th>
+    <th>Hops</th>
+    <th>リスナー</th>
+    <th>リレー</th>
+    <th>接続時間</th>
+    <th>リレー不可<br>(Push)</th>
+    <th>接続エージェント</th>
+    <th>更新(～前)</strong></th>
+  </tr>
+{@end}
+{@loop page.channel.numHits}
+  <tr{@if loop.indexEven} id="e" onmouseover="javascript:this.setAttribute('id', 'eo');" onmouseout="javascript:this.setAttribute('id', 'e');"{@else} id="d" onmouseover="javascript:this.setAttribute('id', 'do');" onmouseout="javascript:this.setAttribute('id', 'd');"{@end}>
+    <td>{$loop.hit.check}</td>
+    <td>{$loop.hit.rhost0} <!-- {$loop.hit.rhost1} --></td>
+    <td>{$loop.hit.numHops}</td>
+    <td>{$loop.hit.numListeners}</td>
+    <td>{$loop.hit.numRelays}</td>
+    <td>{$loop.hit.uptime}</td>
+    <td>{$loop.hit.isFirewalled}</td>
+    <td>{@if loop.hit.agent}{$loop.hit.agent}{@else}不明{@end}</td>
+    <td>{$loop.hit.update}</td>
+  </tr>
+{@end}
+{@if page.channel.numHits}
+  <tr id="e" onmouseover="javascript:this.setAttribute('id', 'eo');" onmouseout="javascript:this.setAttribute('id', 'e');">
+    <th colspan="10">リレー不可(Push)は、0=No 1=Yesとなります</th>
+  </tr>
+</table>
+</form>
+{@end}
+</table>
+<address>&copy; 2005 <a href="/admin?cmd=redirect&amp;url=http://www.peercast.org" target="_blank">peercast.org</a></address>
+</div>
+</body>
+</html>

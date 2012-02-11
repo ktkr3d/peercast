@@ -1,0 +1,611 @@
+// PeerCast relay tree showing script
+// Author: ◆e5bW6vDOJ.
+
+function showTree(hosts_data, show_generatetime)
+{{
+	var start_time = new Date();
+	
+	var color_table = new Array('#2500e0', '#2800e0', '#2c00e0', '#3000e0', '#3400e0', '#3700e0', '#3b00e0', '#3f00e0', '#4300e0', '#4600e0', '#4a00e0', '#4e00e0', '#5200e0', '#5500e0', '#5900e0', '#5d00e0', '#6100e0', '#6400e0', '#6800e0', '#6c00e0', '#7000e0', '#7300e0', '#7700e0', '#7b00e0', '#7e00e0', '#8200e0', '#8600e0', '#8a00e0', '#8d00e0', '#9100e0', '#9500e0', '#9900e0', '#9c00e0', '#a000e0', '#a400e0', '#a800e0', '#ab00e0', '#af00e0', '#b300e0', '#b700e0', '#ba00e0', '#be00e0', '#c200e0', '#c600e0', '#c900e0', '#cd00e0', '#d100e0', '#d500e0', '#d800e0', '#dc00e0', '#e000e0', '#e000dc', '#e000d8', '#e000d5', '#e000d1', '#e000cd', '#e000c9', '#e000c6', '#e000c2', '#e000be', '#e000ba', '#e000b7', '#e000b3', '#e000af', '#e000ab', '#e000a8', '#e000a4', '#e000a0', '#e0009c', '#e00099', '#e00095', '#e00091', '#e0008d', '#e0008a', '#e00086', '#e00082', '#e0007e', '#e0007b', '#e00077', '#e00073', '#e00070', '#e0006c', '#e00068', '#e00064', '#e00061', '#e0005d', '#e00059', '#e00055', '#e00052', '#e0004e', '#e0004a', '#e00046', '#e00043', '#e0003f', '#e0003b', '#e00037', '#e00034', '#e00030', '#e0002c', '#e00028', '#e00025');
+	
+	var max_hops = 50;
+	
+	var hosts = new Array();
+	var ref = new Array();
+	var tree = new Array();
+	
+	var max_uptime = 1;
+	var hosts_count = 0;
+	
+	var i, j;
+	
+	var out = '';
+	
+	var lines = hosts_data.split("\r\n");
+	
+	for(i=0; i<lines.length; i++)
+	{{	// ホストリスト・ツリー作成用テーブル・ツリーの素作成
+		var items = lines[i].split("\t");
+		
+		if(items.length < 8 || items[0].indexOf('loop.') != -1)
+			continue;
+		
+		temp2 = items[0].match(/([\d]+\.[\d]+\.[\d]+\.[\d]+:[\d]+)(\[([^\]]+)\])?/);
+		
+		var temp = new Array();
+		
+		temp['ip'] = temp2[1];
+		temp['_ip'] = get_ip(temp2[1]);
+		temp['name'] = temp2[3];
+		temp['upip'] = items[1];
+		temp['_upip'] = get_ip(items[1]);
+		temp['hops'] = items[2];
+		temp['relays'] = items[3];
+		temp['canrelay'] = items[4];
+		temp['push'] = items[5];
+		temp['uptime'] = get_time(String(items[6]));
+		temp['agent'] = items[7];
+		temp['allow'] = 0;
+		temp['global_upip'] = is_global(temp['upip']);
+		
+		if(temp['hops'] > 0)
+		{{
+			max_uptime = Math.max(max_uptime, temp['uptime']);
+			
+			hosts[temp['ip']] = temp;
+			hosts_count++;
+			
+			if(temp['hops'] == 1)
+			{{
+				tree[temp['ip']] = temp['ip'];
+			}
+			else if(temp['global_upip'])	// hops > 1
+			{{
+				if(ref[temp['upip']] == undefined)
+					ref[temp['upip']] = new Array();
+				
+				ref[temp['upip']][temp['ip']] = temp['ip'];
+			}
+		}
+	}
+	
+	for(var ip in hosts)
+	{{
+		// ローカルでリレーしているホストの処理
+		if(hosts[ip]['hops'] > 1 && !hosts[ip]['global_upip'])
+		{{
+			var newip = get_ip(ip) + ':' + get_port(hosts[ip]['upip']);
+			
+			if(ref[newip] == undefined)
+				ref[newip] = new Array();
+			
+			ref[newip][ip] = ip;
+			hosts[ip]['upip'] = newip;
+		}
+		
+		// ポート0でリレーしているホストの処理
+		if(hosts[ip]['push'] == 1 && hosts[ip]['relays'] > 0)
+		{{
+			for(var _ip in hosts)
+			{{
+				if(hosts[ip]['_ip'] == hosts[_ip]['_upip'] && ip != _ip)
+				{{
+					if(ref[ip] == undefined)
+						ref[ip] = new Array();
+					
+					ref[ip][_ip] = _ip;
+					hosts[_ip]['upip'] = ip;
+				}
+			}
+		}
+	}
+	
+	function create_tree(tree, depth)
+	{{	// ツリー作成
+		var i;
+		var ret = new Array();
+		
+		if(depth > max_hops)
+			throw new Error('Excursion create_tree()');
+		
+		ret['relays_total'] = 0;
+		
+		for(var ip in tree)
+		{{
+			if(hosts[ip]['allow'] == 0)
+			{{
+				hosts[ip]['allow'] = 1;
+				
+				if(ref[ip] != undefined)
+				{{
+					var res;
+					
+					tree[ip] = ref[ip];
+					res = create_tree(tree[ip], depth+1);
+					
+					ret['relays_total'] += res['relays_total'];
+					
+					array_merge(hosts[ip], res);
+					
+					max_relays_total = Math.max(max_relays_total, hosts[ip]['relays_total']);
+				}
+				else
+				{{
+					var res = new Array();
+					
+					res['relays_total'] = 0;
+					
+					array_merge(hosts[ip], res);
+				}
+				
+				ret['relays_total']++;
+			}
+		}
+		
+		return ret;
+	}
+	
+	var max_relays_total = 1;
+	
+	create_tree(tree, 1);
+	
+	var tree_id = 1;
+	
+	function print_tree(tree, depth, lin)
+	{{	// ツリー表示
+		var i, j;
+		
+		if(depth > max_hops)
+			throw new Error('Excursion print_tree()');
+		
+		var count = 0;
+		for(var ip in tree)
+			count++;
+		
+		i = 0;
+		for(var ip in tree)
+		{{
+			var value = Array();
+			var offset = 0;
+			
+			temp = '';
+			for(j=0; j<depth; j++)
+			{{
+				if(lin[j] != undefined)
+					temp += '│';
+				else
+					temp += '  ';
+			}
+			value['line1'] = temp;
+			
+			if(i == count-1)
+				temp = '└';
+			else
+				temp = '├';
+			
+			var flag = depth > 0 && hosts[hosts[ip]['upip']] != undefined && hosts[ip]['hops']-1 != hosts[hosts[ip]['upip']]['hops'];
+			if(flag)	// ツリーがなんかおかしい
+			{{
+				value['line_color'] = '#ee0000';
+				
+				for(var k=depth+1; k<hosts[ip]['hops']; k++, offset++)
+					temp += '─';
+			}
+			else
+			{{
+				value['line_color'] = '#000000';
+			}
+			value['line2'] = temp;
+			
+			value['tree_id'] = tree_id;
+			value['host'] = hosts[ip];
+			value['time_color'] = color_table[parseInt(hosts[ip]['uptime']/max_uptime*100)];
+			value['relays_color'] = color_table[parseInt(hosts[ip]['relays_total']/max_relays_total*100)];
+			
+			
+			tmpl = '';
+			tmpl += '@line1@<font color="@line_color@">@line2@</font>';
+			tmpl += '<a style="text-decoration:none;" href="JavaScript:deproy_some_tree(@tree_id@, @host.relays_total@)">';
+			tmpl += '<font color="@host$get_relay_color@">@host$get_relay_icon@</font>';
+			tmpl += '</a> ';
+			tmpl += '<a style="text-decoration:none;" href="JavaScript:deproy_tree(@tree_id@)">';
+			tmpl += '<font color="@relays_color@">@host.ip@</font> ';
+			tmpl += '<font color="#000000">(@host.relays_total@/@host.relays@) [@host.hops@]</font> ';
+			tmpl += '<font color="@time_color@">@host.uptime$get_time_str@</font>';
+			tmpl += '</a> ';
+			tmpl += "<font color=\"#888888\">@host.name$me?'['+me+'] ':''@</font>";
+			tmpl += '<font color="#888888">@host.agent$html_encode@</font> ';
+			tmpl += "<a href=\"JavaScript:checkip('@host._ip@')\">◇</a>";
+			tmpl += "\n";
+			
+			tmpl += '<div id="tree@tree_id@" style="display:block;">';
+			
+			out += RND(tmpl, value);
+			
+			tree_id++;
+			
+			if(typeof(tree[ip]) == 'object')
+			{{
+				if(count > 1 && i < count-1)
+					lin[depth] = depth;
+				
+				print_tree(tree[ip], depth+1+offset, lin);
+				
+				delete lin[depth];
+			}
+			
+			out += '</div>';
+			
+			i++;
+		}
+	}
+	
+	var relay_count = 0;
+	for(var ip in tree)
+		relay_count++;
+	
+	var tmpl = '';
+	tmpl += '<a style="text-decoration:none;" href="JavaScript:deproy_some_tree(@tree_id@, @hosts_count$me-1@)">';
+	tmpl += '<font color="#000000">■</font></a> {$servMgr.serverIP}:{$servMgr.serverPort} (@hosts_count@/@relay_count@) [0]';
+	tmpl += "\n";
+	value = {{'tree_id': tree_id, 'hosts_count': hosts_count, 'relay_count': relay_count};
+	
+	out += RND(tmpl, value);
+	
+	print_tree(tree, 0, new Array());
+	
+	var umhosts = new Array();
+	var max_hops = 0;
+	
+	for(var ip in hosts)
+	{{	// ツリー化不可ホストリスト作成
+		if(hosts[ip]['allow'] == 0)
+		{{
+			if(umhosts[hosts[ip]['hops']] == undefined)
+				umhosts[hosts[ip]['hops']] = new Array();
+			
+			umhosts[hosts[ip]['hops']][ip] = ip;
+			
+			max_hops = Math.max(max_hops, hosts[ip]['hops']);
+		}
+	}
+	
+	out += "\n";
+	
+	for(i=0; i<=max_hops; i++)
+	{{	// ツリー化不可ホスト表示
+		if(umhosts[i] != undefined)
+		{{
+			for(var ip in umhosts[i])
+			{{
+				if(hosts[ip]['allow'] == 0)
+				{{
+					var umtree = new Array();
+					var hops = hosts[ip]['hops']-1;
+					
+					for(j=0; j<hops; j++)
+						out += '  ';
+					out += RND("<font color=\"#888888\">■ @host.upip@</font>\n", {{'host': hosts[ip]});
+					
+					if(ref[hosts[ip]['upip']] != undefined)
+						umtree = ref[hosts[ip]['upip']];
+					else
+						umtree[ip] = ip;
+					
+					create_tree(umtree, hops);
+					
+					print_tree(umtree, hops, new Array());
+					
+					out += "\n";
+				}
+			}
+		}
+	}
+	
+	var end_time = new Date();
+	
+	if(show_generatetime)
+		out += 'Generate time: ' + parseInt(end_time-start_time) + ' ms<br>';
+	
+	return out;
+}
+
+function get_relay_color(host)
+{{
+	if(host['push'] == 1)
+	{{
+		if(host['relays'] == 0)
+		{{
+			return '#ee0000';
+		}
+		else
+		{{
+			return '#ff8800';
+		}
+	}
+	else
+	{{
+		if(host['canrelay'] == 0)
+		{{
+			if(host['relays'] == 0)
+			{{
+				return '#dd00dd';
+			}
+			else
+			{{
+				return '#0000ff';
+			}
+		}
+		else
+		{{
+			return '#00cc00';
+		}
+	}
+}
+
+function get_relay_icon(host)
+{{
+	if(host['push'] == 1)
+	{{
+		if(host['relays'] == 0)
+		{{
+			return '▲';
+		}
+		else
+		{{
+			return '▼';
+		}
+	}
+	else
+	{{
+		if(host['canrelay'] == 0)
+		{{
+			if(host['relays'] == 0)
+			{{
+				return '◆';
+			}
+			else
+			{{
+				return '■';
+			}
+		}
+		else
+		{{
+			return '●';
+		}
+	}
+}
+
+function get_time(str)
+{{
+	var ret = 0;
+	var temp = str.match(/(([\d]+) day)?[^\d]*(([\d]+) hour)?[^\d]*(([\d]+) min)?[^\d]*(([\d]+) sec)?/);
+	
+	if(temp[2] != undefined && temp[2] != '') ret += parseInt(temp[2]) * 60*60*24;
+	if(temp[4] != undefined && temp[4] != '') ret += parseInt(temp[4]) * 60*60;
+	if(temp[6] != undefined && temp[6] != '') ret += parseInt(temp[6]) * 60;
+	if(temp[8] != undefined && temp[8] != '') ret += parseInt(temp[8]);
+	
+	return ret;
+}
+
+function get_time_str(t)
+{{
+	var min = parseInt((t % (60*60)) / 60);
+	var hour = parseInt(t / (60*60));
+	
+	if(min < 10)
+		min = '0' + min;
+	
+	return hour + ':' + min;
+}
+
+function is_opera()
+{{
+	return true;
+	return window.opera;
+}
+
+function is_firefox()
+{{
+	return ((a=navigator.userAgent.split("Gecko/")[1] )?a.split(" ")[0]:0) >= 20011128;
+}
+
+function is_global(ip)
+{{
+	var temp = ip.match(/([\d]+)\.([\d]+)\.([\d]+)\.([\d]+)/);
+	
+	temp[1] = parseInt(temp[1]);
+	temp[2] = parseInt(temp[2]);
+	temp[3] = parseInt(temp[3]);
+	temp[4] = parseInt(temp[4]);
+	
+	if(temp[1] == 192 && temp[2] == 168)
+		return false;
+	if(temp[1] == 127 && temp[2] == 0 && temp[3] == 0 && temp[4] == 1)
+		return false;
+	if(temp[1] == 172 && temp[2] >= 16 && temp[2] <= 31)
+		return false;
+	if(temp[1] == 10)
+		return false;
+	
+	return true;
+}
+
+function get_ip(ip)
+{{
+//	var temp = ip.match(/([\d]+\.[\d]+\.[\d]+\.[\d]+)/);
+	var temp = ip.match(/([^:]+)/);
+	return temp[1];
+}
+
+function get_port(ip)
+{{
+//	var temp = ip.match(/[^:]+:([\d]+)/);
+	var temp = ip.match(/:([\d]+)/);
+	return temp[1];
+}
+
+function array_merge(dst, src)
+{{
+	for(var key in src)
+	{{
+		dst[key] = src[key];
+	}
+}
+
+function deproy(id)
+{{
+	if(document.getElementById(id).style.display == "none")
+		document.getElementById(id).style.display = "block";
+	else
+		document.getElementById(id).style.display = "none";
+}
+
+function deproy_tree(id)
+{{
+	id = 'tree' + id;
+	
+	if(document.getElementById(id).style.display == "none")
+		document.getElementById(id).style.display = "block";
+	else
+		document.getElementById(id).style.display = "none";
+}
+
+function deproy_some_tree(start, num)
+{{
+	var i;
+	var state;
+	var end = start + num;
+	var id = 'tree' + start;
+	
+	if(num < 1)
+		return;
+	
+	if(document.getElementById(id).style.display == "none")
+		state = "block";
+	else
+		state = "none";
+	
+	for(i=start; i<=end; i++)
+	{{
+		id = 'tree' + String(i);
+		
+		document.getElementById(id).style.display = state;
+	}
+}
+
+function html_encode(str)
+{{
+	return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#039;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function checkip(ip)
+{{
+	document.check.ip.value = ip;
+	document.check.submit();
+}
+
+function createHttpRequest()
+{{
+	if(window.ActiveXObject)
+	{{
+		try
+		{{
+			return new ActiveXObject("Msxml2.XMLHTTP");
+		}
+		catch(e)
+		{{
+			try
+			{{
+				return new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			catch(e2)
+			{{
+				return null;
+			}
+		}
+	}
+	else if(window.XMLHttpRequest)
+	{{
+		return new XMLHttpRequest();
+	}
+	else
+	{{
+		return null;
+	}
+}
+
+function requestFile(data, method, fileName, async, fn, arg)
+{{
+	var httpobj = createHttpRequest();
+	
+	httpobj.open(method, fileName, async);
+	httpobj.setRequestHeader('If-Modified-Since', 'Wed, 15 Nov 1995 00:00:00 GMT');
+	
+	var ua = navigator.userAgent;
+	var safari = ua.indexOf("Safari") != -1;
+	var firefox = is_firefox();
+	
+	if(window.opera || safari || firefox)
+	{{
+		httpobj.onload = function()
+			{{
+				if (httpobj.readyState==4)
+				{{ 
+					fn(httpobj, arg);
+				}
+			}
+	}
+	else
+	{{
+		httpobj.onreadystatechange = function()
+			{{ 
+				if (httpobj.readyState==4)
+				{{ 
+					fn(httpobj, arg);
+				}
+			}
+	}
+	
+	httpobj.send(data);
+}
+
+function RND(_template, ns)
+{{
+	var fn = function(_org, _match)
+	{{
+		try
+		{{
+			_match = _match.split('$');
+			var _names = _match[0].split('.');
+			var _value = ns[_names[0]];
+			
+			for(var i=1; i<_names.length; i++)
+				_value = _value[_names[i]];
+			
+			for(var i=1; i<_match.length; i++)
+			{{
+				if(_match[i].match(/[^a-zA-Z0-9_]/))
+				{{
+					var me = _value;
+					_value = eval(_match[i]);
+				}
+				else
+				{{
+					_value = eval(_match[i])(_value);
+				}
+			}
+			
+			if(_value != undefined)
+				return _value;
+			else
+				return _org;
+		}
+		catch(e)
+		{{
+			return _org;
+		}
+	};
+	
+	return _template.replace(/@([^@]+)@/g, fn);
+}
