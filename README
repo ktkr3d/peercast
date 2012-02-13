@@ -2,7 +2,7 @@ PeerCast for Linux
 
 PeerCast is a P2P streaming server. It can stream music and video from a broad variety of formats. 
 
-Instruction:
+Build and run:
 ------------
     $ cd ui/linux
     $ make
