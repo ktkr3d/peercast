@@ -7,6 +7,7 @@ It can stream music and video from a broad variety of formats.
 
 ``` bash
 $ cd ui/linux
+$ ln -s ../html html
 $ make
 $ ./peercast
 ```
