@@ -1,20 +1,21 @@
-PeerCast for Linux
-------------------
-    PeerCast is a P2P streaming server. 
-    It can stream music and video from a broad variety of formats. 
+#PeerCast for Linux
 
-Build and run
--------------
-    $ cd ui/linux
-    $ make
-    $ ./peercast
+PeerCast is a P2P streaming server. 
+It can stream music and video from a broad variety of formats. 
 
-Original Source Code
---------------------
-    - peercast (0.1218+svn20080104-1.2 and others)
-      http://packages.debian.org/en/sid/peercast
-    - VP0027-1
+##Build and run
 
-Licence
--------
-    GPL
+``` bash
+$ cd ui/linux
+$ make
+$ ./peercast
+```
+
+##Original Source Code
+
+- [peercast (0.1218+svn20080104-1.2 and others)](http://packages.debian.org/en/sid/peercast)
+- VP0027-1
+
+##Licence
+
+GPL
